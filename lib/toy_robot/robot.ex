@@ -1,6 +1,6 @@
 defmodule ToyRobot.Robot do
   alias ToyRobot.Robot
-  defstruct [y: 0, x: 0, facing: :north]
+  defstruct [x: 0, y: 0, facing: :north]
   @doc """
   Moves the robot one space in the direction it is facing.
 
