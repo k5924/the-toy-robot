@@ -31,4 +31,14 @@ defmodule ToyRobot.CommandInterpreter do
         facing: facing |> String.downcase |> String.to_atom
     }}
   end
+
+  def do_interpret("MOVE"), do: :move
+
+  def do_interpret("LEFT"), do: :turn_left
+
+  def do_interpret("RIGHT"), do: :turn_right
+
+  def do_interpret("REPORT"), do: :report
+  
+  def do_interpret(command), do: {:invalid, command}
 end
