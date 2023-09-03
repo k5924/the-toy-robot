@@ -92,4 +92,16 @@ defmodule ToyRobot.CommandRunnerTest do
     assert output |> String.trim == "The robot is at (1, 2) and is facing NORTH"
   end
 
+  test "handles a place + invalid command" do
+    %Simulation{robot: robot} = [
+      {:place, %{x: 1, y: 2, facing: :north}},
+      {:invalid, "EXTERMINATE"}
+    ]
+    |> CommandRunner.run()
+
+    assert robot.x == 1;
+    assert robot.y == 2
+    assert robot.facing == :north
+  end
+
 end
