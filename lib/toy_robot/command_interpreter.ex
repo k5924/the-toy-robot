@@ -7,8 +7,8 @@ defmodule ToyRobot.CommandInterpreter do
 
     iex> alias ToyRobot.CommandInterpreter
     ToyRobot.CommandInterpreter
-    iex> commands = ["PLACE 1, 2, NORTH", "MOVE", "LEFT", "RIGHT", "REPORT"]
-    ["PLACE 1, 2, NORTH", "MOVE", "LEFT", "RIGHT", "REPORT"]
+    iex> commands = ["PLACE 1,2,NORTH", "MOVE", "LEFT", "RIGHT", "REPORT"]
+    ["PLACE 1,2,NORTH", "MOVE", "LEFT", "RIGHT", "REPORT"]
     iex> commands |> CommandInterpreter.interpret()
     [
       {:place, %{x: 1, y: 2, facing: :north}},
@@ -22,14 +22,18 @@ defmodule ToyRobot.CommandInterpreter do
     commands |> Enum.map(&do_interpret/1)
   end
 
-  def do_interpret("PLACE " <> rest) do
-    [x, y, facing] = rest |> String.split(", ")
-    to_int = &String.to_integer/1
-    {:place, %{
-        x: to_int.(x),
-        y: to_int.(y),
-        facing: facing |> String.downcase |> String.to_atom
-    }}
+  def do_interpret(("PLACE" <> _rest) = command) do
+    format = ~r/\APLACE (\d+),(\d+),(NORTH|EAST|SOUTH|WEST)\z/
+    case Regex.run(format, command) do
+      [_command, x, y, facing] ->
+        to_int = &String.to_integer/1
+        {:place, %{
+            x: to_int.(x),
+            y: to_int.(y),
+            facing: facing |> String.downcase |> String.to_atom
+        }}
+      nil -> {:invalid, command}
+    end
   end
 
   def do_interpret("MOVE"), do: :move

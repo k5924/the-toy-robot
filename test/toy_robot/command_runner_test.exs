@@ -104,4 +104,41 @@ defmodule ToyRobot.CommandRunnerTest do
     assert robot.facing == :north
   end
 
+  test "robot cannot move past the north boundary" do
+    %Simulation{robot: robot} = [
+      {:place, %{x: 0, y: 4, facing: :north}},
+      :move
+    ]
+    |> CommandRunner.run()
+
+    assert robot.y == 4;
+  end
+
+  test "robot cannot move past the east boundary" do
+    %Simulation{robot: robot} = [
+      {:place, %{x: 4, y: 0, facing: :east}},
+      :move
+    ]
+    |> CommandRunner.run()
+
+    assert robot.x == 4;
+  end
+  test "robot cannot move past the south boundary" do
+    %Simulation{robot: robot} = [
+      {:place, %{x: 0, y: 0, facing: :south}},
+      :move
+    ]
+    |> CommandRunner.run()
+
+    assert robot.y == 0;
+  end
+  test "robot cannot move past the west boundary" do
+    %Simulation{robot: robot} = [
+      {:place, %{x: 0, y: 0, facing: :west}},
+      :move
+    ]
+    |> CommandRunner.run()
+
+    assert robot.x == 0;
+  end
 end
