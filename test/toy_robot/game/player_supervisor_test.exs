@@ -1,11 +1,18 @@
 defmodule ToyRobot.Game.PlayerSupervisorTest do
   use ExUnit.Case, async: true
 
-  alias ToyRobot.{Game.PlayerSupervisor, Robot}
+  alias ToyRobot.{Game.PlayerSupervisor, Table}
+
+  def build_table do
+    %Table{
+        x_boundary: 4,
+        y_boundary: 4
+      }
+  end
 
   test "starts a game child process" do
-    robot = %Robot{x: 0, y: 0, facing: :north}
-    {:ok, player} = PlayerSupervisor.start_child(robot, "Izzy")
+    starting_position = %{x: 0, y: 0, facing: :north}
+    {:ok, player} = PlayerSupervisor.start_child(build_table(), starting_position, "Izzy")
 
     [{registered_player, _}] = Registry.lookup(ToyRobot.Game.PlayerRegistry, "Izzy")
     assert registered_player == player
@@ -18,8 +25,8 @@ defmodule ToyRobot.Game.PlayerSupervisorTest do
   end
 
   test "moves a robot forward" do
-    robot = %Robot{x: 0, y: 0, facing: :north}
-    {:ok, _player} = PlayerSupervisor.start_child(robot, "Charlie")
+    starting_position = %{x: 0, y: 0, facing: :north}
+    {:ok, _player} = PlayerSupervisor.start_child(build_table(), starting_position, "Charlie")
     :ok = PlayerSupervisor.move("Charlie")
     %{y: y} = PlayerSupervisor.report("Charlie")
 
@@ -27,8 +34,8 @@ defmodule ToyRobot.Game.PlayerSupervisorTest do
   end
 
   test "reports a robots location" do
-    robot = %Robot{x: 0, y: 0, facing: :north}
-    {:ok, _player} = PlayerSupervisor.start_child(robot, "Davros")
+    starting_position = %{x: 0, y: 0, facing: :north}
+    {:ok, _player} = PlayerSupervisor.start_child(build_table(), starting_position, "Davros")
     %{y: y} = PlayerSupervisor.report("Davros")
 
     assert y == 0
