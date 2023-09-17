@@ -15,4 +15,12 @@ defmodule ToyRobot.Game.PlayerSupervisor do
   def start_child(robot, name) do
     DynamicSupervisor.start_child(__MODULE__, {Player, [robot: robot, name: name]})
   end
+
+  def move(name) do
+    name |> Player.process_name() |> Player.move()
+  end
+
+  def report(name) do
+    name |> Player.process_name() |> Player.report()
+  end
 end

@@ -20,8 +20,17 @@ defmodule ToyRobot.Game.PlayerSupervisorTest do
   test "moves a robot forward" do
     robot = %Robot{x: 0, y: 0, facing: :north}
     {:ok, _player} = PlayerSupervisor.start_child(robot, "Charlie")
-    %{robot: %{y: y}} = PlayerSupervisor.move("Charlie")
+    :ok = PlayerSupervisor.move("Charlie")
+    %{y: y} = PlayerSupervisor.report("Charlie")
 
     assert y == 1
+  end
+
+  test "reports a robots location" do
+    robot = %Robot{x: 0, y: 0, facing: :north}
+    {:ok, _player} = PlayerSupervisor.start_child(robot, "Davros")
+    %{y: y} = PlayerSupervisor.report("Davros")
+
+    assert y == 0
   end
 end
