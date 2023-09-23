@@ -12,14 +12,15 @@ defmodule ToyRobot.Game.PlayerSupervisor do
   end
 
   def start_child(registry_id, table, position, name) do
-    DynamicSupervisor.start_child(__MODULE__, {Player, [registry_id: registry_id, table: table, position: position, name: name]})
-  end
-
-  def move(name) do
-    name |> Player.process_name() |> Player.move()
-  end
-
-  def report(name) do
-    name |> Player.process_name() |> Player.report()
+    DynamicSupervisor.start_child(
+      __MODULE__,
+      {Player,
+       [
+         registry_id: registry_id,
+         table: table,
+         position: position,
+         name: name
+       ]}
+    )
   end
 end
